@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [tip] = useState("Tip: Manager? manager@ems.com / manager123");
+  const tip = "Tip: Manager? manager@ems.com / manager123";
 
   const submit = async (e) => {
     e.preventDefault();
     try {
       await login(form.email, form.password);
       navigate("/events"); // ✅ Redirect to events page after login
-    } catch (e) {
-      alert(e.response?.data?.message || "Login failed");
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -78,12 +78,12 @@ export default function LoginPage() {
         {/* Signup Link */}
         <p className="text-center text-gray-600 text-sm mt-6">
           Don’t have an account?{" "}
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="text-purple-600 font-medium hover:underline"
           >
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </div>

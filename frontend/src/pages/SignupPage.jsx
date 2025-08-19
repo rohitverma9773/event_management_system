@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignupPage() {
   const { register } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
     try {
       await register(form.name, form.email, form.password);
+      navigate('/'); // 👈 Redirect to home after successful signup
     } catch (e) {
       alert(e.response?.data?.message || 'Signup failed');
     }

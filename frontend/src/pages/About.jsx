@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function About() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -67,12 +71,12 @@ export default function About() {
             Whether you're an event manager or an attendee, our platform is built to give you the
             best experience.
           </p>
-          <a
-            href="/signup"
+          <button
+            onClick={() => navigate("/events")}
             className="inline-block px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow hover:bg-indigo-700 transition-colors"
           >
             Get Started
-          </a>
+          </button>
         </div>
       </div>
     </div>
