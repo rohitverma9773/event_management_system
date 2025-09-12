@@ -22,11 +22,17 @@ router.post('/', auth, async (req, res) => {
   await event.save();
 
   const totalPrice = event.price * count;
+
+  // Find last booking for user to assign position
+  const lastBooking = await Booking.findOne({ user: req.user._id }).sort('-position');
+  const newPosition = lastBooking ? lastBooking.position + 1 : 0;
+
   const booking = await Booking.create({
     user: req.user._id,
     event: event._id,
     qty: count,
-    totalPrice
+    totalPrice,
+    position: newPosition
   });
   
   sendMail(req.user.email,`Booking Confirmation - ${event.title}`,"abcd",`<h2>Booking Confirmed!</h2>
@@ -39,12 +45,12 @@ router.post('/', auth, async (req, res) => {
   res.status(201).json(booking);
 });
 
-/** User: my bookings */
+/** User: my bookings (sorted by position) */
 router.get('/me', auth, async (req, res) => {
   if (req.user.role !== 'user') return res.status(403).json({ message: 'Forbidden' });
   const bookings = await Booking.find({ user: req.user._id })
     .populate('event')
-    .sort({ createdAt: -1 });
+    .sort({ position: 1 });
   res.json(bookings);
 });
 
@@ -55,6 +61,28 @@ router.get('/all', auth, requireRole('manager'), async (req, res) => {
     .populate('event', 'title date price')
     .sort({ createdAt: -1 });
   res.json(bookings);
+});
+
+/** User: reorder bookings */
+router.put('/reorder', auth, async (req, res) => {
+  if (req.user.role !== 'user') return res.status(403).json({ message: 'Forbidden' });
+
+  const { orderedIds } = req.body; // array of booking IDs in new order
+
+  try {
+    await Promise.all(
+      orderedIds.map((id, index) =>
+        Booking.findOneAndUpdate(
+          { _id: id, user: req.user._id },
+          { position: index }
+        )
+      )
+    );
+
+    res.json({ message: "Order updated" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 export default router;

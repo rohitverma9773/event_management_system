@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import MyBookingsPage from './pages/MyBookingsPage';
@@ -27,7 +29,9 @@ export default function App() {
           path="/my-bookings"
           element={
             <PrivateRoute role="user">
-              <MyBookingsPage />
+              <DndProvider backend={HTML5Backend}>
+                <MyBookingsPage />
+              </DndProvider>
             </PrivateRoute>
           }
         />
