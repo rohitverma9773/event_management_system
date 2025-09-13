@@ -15,37 +15,42 @@ import UpcomingEvents from './components/UpcomingEvent';
 
 export default function App() {
   return (
-    <div className="container">
+    <div className="w-full flex flex-col min-h-screen">
+      {/* Navbar always full width */}
       <Navbar />
 
-      <Routes>
-        <Route index element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path='/event' element={<UpcomingEvents />} />
-        <Route path= "/about" element={<About/>} />
-        {/* <Route path="/payment" element={<PaymentPage />} /> */}
-        <Route
-          path="/my-bookings"
-          element={
-            <PrivateRoute role="user">
-              <DndProvider backend={HTML5Backend}>
-                <MyBookingsPage />
-              </DndProvider>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/manager"
-          element={
-            <PrivateRoute role="manager">
-              <ManagerDashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      {/* Page Routes */}
+      <div className="flex-grow">
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/event" element={<UpcomingEvents />} />
+          <Route path="/about" element={<About />} />
+          {/* <Route path="/payment" element={<PaymentPage />} /> */}
+          <Route
+            path="/my-bookings"
+            element={
+              <PrivateRoute role="user">
+                <DndProvider backend={HTML5Backend}>
+                  <MyBookingsPage />
+                </DndProvider>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/manager"
+            element={
+              <PrivateRoute role="manager">
+                <ManagerDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
 
+      {/* Footer always full width */}
       <Footer />
     </div>
   );
